@@ -29,12 +29,11 @@ if (process.argv.length === 3) {
     })
 }
 
-if (process.argv.length === 5) {
+const name = process.argv[3];
+const number = process.argv[4];
 
-    const name = process.argv[3];
-    const number = process.argv[4];
-
-
+if (name && number) {
+    
     const person = new Person({
         name: name,
         number: number
