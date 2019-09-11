@@ -8,7 +8,7 @@ if (process.argv.length < 3) {
 const personSchema = new mongoose.Schema({
     name: String,
     number: String
-})
+});
 
 const Person = mongoose.model('Person', personSchema);
 
@@ -21,12 +21,12 @@ mongoose.connect(url, { useNewUrlParser: true });
 
 if (process.argv.length === 3) {
     Person.find({}).then(result => {
-        console.log('phonebook:')
+        console.log('phonebook:');
         result.forEach(person => {
             console.log(`${person.name} ${person.number}`);
         });
         mongoose.connection.close();
-    })
+    });
 }
 
 const name = process.argv[3];
