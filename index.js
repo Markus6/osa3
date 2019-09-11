@@ -53,9 +53,15 @@ app.get('/api/persons', (req, res) => {
     });
 });
 
-app.get('/info', (req, res) => {
+app.get('/info', (req, res, next) => {
     const moment = new Date();
-    res.send(`<p>Phonebook has info for ${persons.length} people</p>${moment}`)
+    
+    Person.estimatedDocumentCount()
+    .then(count => {
+        res.send(`<p>Phonebook has info for ${count} people</p>${moment}`)
+    })
+    .catch(error => next(error));
+      
 });
 
 app.get('/api/persons/:id', (req, res, next) => {
@@ -74,7 +80,7 @@ app.get('/api/persons/:id', (req, res, next) => {
 });
 
 app.delete('/api/persons/:id', (req, res, next) => {
-    
+
     Person.findByIdAndRemove(req.params.id)
     .then(result => {
         res.status(204).end();
@@ -110,6 +116,21 @@ app.post('/api/persons', (req, res) => {
     person.save().then(savedPerson => {
         res.json(savedPerson.toJSON());
     });
+});
+
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body;
+
+    const person = {
+        name : body.name,
+        number: body.number
+    };
+
+    Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPerson => {
+        res.json(updatedPerson.toJSON());
+    })
+    .catch(error => next(error));
 });
 
 const unkownEndpoint = (req, res) => {
