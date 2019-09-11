@@ -12,7 +12,7 @@ app.use(cors());
 
 app.use(bodyParser.json());
 //app.use(morgan('tiny'))
-morgan.token('postbody', function (req) { 
+morgan.token('postbody', function (req, res) { 
     if (req.method == 'POST') {
         return JSON.stringify(req.body);
     }
@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello World!</h1>');
 });
 
-app.get('/api/persons', (res) => {
+app.get('/api/persons', (req, res) => {
     Person.find({}).then(persons => {
         res.json(persons.map(person => person.toJSON()));
     });
@@ -60,7 +60,6 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
     Person.findByIdAndRemove(req.params.id)
         .then(result => {
-            console.log(result);
             res.status(204).end();
         })
         .catch(error => next(error));
